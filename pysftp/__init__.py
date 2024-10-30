@@ -129,7 +129,11 @@ class Connection(object):   # pylint:disable=r0902,r0904
             self._cnopts.ciphers = ciphers
         # check that we have a hostkey to verify
         if self._cnopts.hostkeys is not None:
-            self._tconnect['hostkey'] = self._cnopts.get_hostkey(host)
+            try:
+                self._tconnect['hostkey'] = self._cnopts.get_hostkey(host)
+            except:
+                wmsg = f"No hostkey was found for host {host}"
+                warnings.warn(wmsg, UserWarning)
 
         self._sftp_live = False
         self._sftp = None
